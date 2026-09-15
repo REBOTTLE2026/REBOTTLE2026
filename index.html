@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1f3b30">
+    <meta name="theme-color" content="#0e1311">
     <title>RE BOTTLE — Handmade Glass | Посуд і декор з пляшок ручної роботи</title>
     <meta name="description" content="RE BOTTLE — стакани, бокали, соусниці, вази та підсвічники ручної роботи зі скляних пляшок. Доставка в Польщу та Україну.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=1">
+    <link rel="stylesheet" href="styles.css?v=2">
 
     <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.11.0/firebase-auth-compat.js"></script>
@@ -28,19 +28,73 @@
                 RE <span class="logo-sub">BOTTLE</span>
             </a>
 
-            <nav class="main-nav">
-                <a href="#catalog">Каталог</a>
-                <a href="#about">Про нас</a>
-                <a href="#delivery">Доставка та оплата</a>
-                <a href="#contacts">Контакти</a>
-            </nav>
+            <!-- КАТЕГОРІЇ -->
+            <div class="dropdown" id="categoryDropdown">
+                <button type="button" class="dropdown-toggle" onclick="toggleCategoryMenu(event)">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span data-i18n="categories">Категорії</span>
+                    <i class="fa-solid fa-chevron-down caret"></i>
+                </button>
+                <div class="dropdown-menu" id="categoryMenu"></div>
+            </div>
 
-            <div class="header-right">
-                <div class="currency-toggle">
-                    <button type="button" id="curPLN" class="active" onclick="setCurrency('PLN')">PLN</button>
-                    <button type="button" id="curUAH" onclick="setCurrency('UAH')">UAH</button>
+            <!-- ПОШУК -->
+            <div class="header-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" autocomplete="off"
+                       data-i18n-placeholder="searchPlaceholder"
+                       placeholder="Пошук за назвою або артикулом..."
+                       oninput="handleSearch(this.value)"
+                       onfocus="handleSearch(this.value)">
+                <div class="autocomplete-list" id="searchResults"></div>
+            </div>
+
+            <div class="header-actions">
+                <!-- ПІДТРИМКА / КОНТАКТИ -->
+                <div class="dropdown" id="contactsDropdown" style="position: relative;">
+                    <button type="button" class="header-chip" onclick="toggleContactsMenu(event)">
+                        <i class="fa-solid fa-headset"></i>
+                        <span class="header-chip-text">
+                            <b data-i18n="support">Підтримка</b>
+                            <span data-i18n="supportSub">Ми на зв'язку</span>
+                        </span>
+                    </button>
+                    <div class="contacts-popover" id="contactsPopover">
+                        <a href="https://t.me/Agent_Ruslan" target="_blank" rel="noopener" class="contact-option">
+                            <i class="fa-brands fa-telegram ic-telegram"></i>
+                            <div><b>Telegram</b><span data-i18n="writeManager">Написати менеджеру</span></div>
+                        </a>
+                        <a href="viber://chat?number=%2B380680475706" class="contact-option">
+                            <i class="fa-brands fa-viber ic-viber"></i>
+                            <div><b>Viber</b><span>+38 068 047 57 06</span></div>
+                        </a>
+                        <a href="https://wa.me/48787212708" target="_blank" rel="noopener" class="contact-option">
+                            <i class="fa-brands fa-whatsapp ic-whatsapp"></i>
+                            <div><b>WhatsApp</b><span>+48 787 212 708</span></div>
+                        </a>
+                        <a href="https://www.instagram.com/drapak.ruslan23" target="_blank" rel="noopener" class="contact-option">
+                            <i class="fa-brands fa-instagram ic-instagram"></i>
+                            <div><b>Instagram</b><span>@drapak.ruslan23</span></div>
+                        </a>
+                        <a href="https://www.tiktok.com/@agent_ruslann" target="_blank" rel="noopener" class="contact-option">
+                            <i class="fa-brands fa-tiktok ic-tiktok"></i>
+                            <div><b>TikTok</b><span>@agent_ruslann</span></div>
+                        </a>
+                        <a href="https://t.me/+7t_IkxPRqqo3MmQ0" target="_blank" rel="noopener" class="contact-option">
+                            <i class="fa-solid fa-bullhorn" style="color: var(--amber);"></i>
+                            <div><b data-i18n="channel">Наш канал</b><span data-i18n="channelSub">Новинки та акції</span></div>
+                        </a>
+                    </div>
                 </div>
-                <button type="button" class="icon-btn" title="Кошик" onclick="openCartModal()">
+
+                <!-- МОВА -->
+                <div class="lang-toggle">
+                    <button type="button" id="langUA" class="active" onclick="setLang('ua')">UA</button>
+                    <button type="button" id="langPL" onclick="setLang('pl')">PL</button>
+                </div>
+
+                <!-- КОШИК -->
+                <button type="button" class="icon-btn" onclick="openCartModal()" data-i18n-title="cart" title="Кошик">
                     <i class="fa-solid fa-bag-shopping"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
@@ -53,24 +107,21 @@
         <div class="container hero-grid">
             <div class="hero-content">
                 <div class="hero-tagline"><i class="fa-solid fa-recycle"></i> Reuse · Handmade · Unique</div>
-                <h1>Друге життя <span class="accent">скляної пляшки</span></h1>
-                <p class="lede">Естетичний декор та посуд ручної роботи: унікальні стакани, бокали, соусниці, вази та підсвічники — кожен виріб відшліфований вручну і не має точної копії.</p>
+                <h1 data-i18n-html="heroTitle">Друге життя <span class="accent">скляної пляшки</span></h1>
+                <p class="lede" data-i18n="heroLede">Естетичний декор та посуд ручної роботи: унікальні стакани, бокали, соусниці, вази та підсвічники — кожен виріб відшліфований вручну і не має точної копії.</p>
                 <div class="hero-cta">
-                    <a href="#catalog" class="btn btn-primary"><i class="fa-solid fa-arrow-down"></i> Переглянути каталог</a>
-                    <a href="#about" class="btn btn-outline">Про виробництво</a>
+                    <a href="#catalog" class="btn btn-primary"><i class="fa-solid fa-arrow-down"></i> <span data-i18n="viewCatalog">Переглянути каталог</span></a>
+                    <a href="#about" class="btn btn-outline" data-i18n="aboutProduction">Про виробництво</a>
                 </div>
                 <div class="hero-facts">
-                    <div class="hero-fact"><b>100%</b><span>відшліфовані краї</span></div>
-                    <div class="hero-fact"><b>PL → UA</b><span>виробництво і доставка</span></div>
-                    <div class="hero-fact"><b>0</b><span>однакових виробів</span></div>
+                    <div class="hero-fact"><b>100%</b><span data-i18n="fact1">відшліфовані краї</span></div>
+                    <div class="hero-fact"><b>PL → UA</b><span data-i18n="fact2">виробництво і доставка</span></div>
+                    <div class="hero-fact"><b>0</b><span data-i18n="fact3">однакових виробів</span></div>
                 </div>
             </div>
             <div class="hero-visual">
-                <div class="hero-ink-frame">
-                    <img src="assets/logo-mark.png" alt="RE BOTTLE — пляшка і чарка" class="hero-ink-mark">
-                </div>
-                <img src="data/hero.jpg" alt="Стакани ручної роботи з пляшок" class="hero-photo" loading="eager" onload="this.style.display='block'" onerror="this.style.display='none'">
-                <div class="hero-visual-badge">🍾 Кожна пляшка отримує друге життя замість смітника</div>
+                <video src="assets/hero.mp4" poster="assets/hero-poster.jpg" autoplay muted loop playsinline></video>
+                <div class="hero-visual-badge" data-i18n="heroBadge">🍾 Кожна пляшка отримує друге життя замість смітника</div>
             </div>
         </div>
     </section>
@@ -79,16 +130,16 @@
     <main class="container" id="catalog">
         <div class="section-header">
             <div>
-                <h2>Каталог</h2>
-                <p>Обирай категорію або дивись усе одразу — асортимент оновлюється щотижня.</p>
+                <div class="section-eyebrow" data-i18n="catalogEyebrow">Каталог</div>
+                <h2 id="catalogTitle" data-i18n="allProducts">Всі товари</h2>
+                <p data-i18n="catalogSub">Кожен виріб унікальний — асортимент оновлюється щотижня.</p>
             </div>
+            <button type="button" class="btn btn-outline" onclick="filterCategory('all')">
+                <span data-i18n="showAll">Показати всі</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
         </div>
 
-        <div class="category-filters" id="categoryFilters">
-            <button type="button" class="category-filter-btn active" data-category="all" onclick="filterCategory('all')">Всі</button>
-            <span id="categoryFilterLinks"></span>
-        </div>
-
+        <div class="category-filters" id="categoryFilters"></div>
         <div class="products-grid" id="products-container"></div>
     </main>
 
@@ -97,24 +148,25 @@
         <div class="container">
             <div class="section-header">
                 <div>
-                    <h2>Чому RE BOTTLE</h2>
+                    <div class="section-eyebrow" data-i18n="whyEyebrow">Переваги</div>
+                    <h2 data-i18n="whyTitle">Чому RE BOTTLE</h2>
                 </div>
             </div>
             <div class="advantages-grid">
                 <div class="advantage-card">
                     <div class="advantage-icon"><i class="fa-solid fa-shield-heart"></i></div>
-                    <h3>Безпечні краї</h3>
-                    <p>Кожен виріб проходить кілька етапів шліфування — краї ідеально гладкі й безпечні у щоденному використанні.</p>
+                    <h3 data-i18n="adv1Title">Безпечні краї</h3>
+                    <p data-i18n="adv1Text">Кожен виріб проходить кілька етапів шліфування — краї ідеально гладкі й безпечні у щоденному використанні.</p>
                 </div>
                 <div class="advantage-card">
                     <div class="advantage-icon"><i class="fa-solid fa-hand-sparkles"></i></div>
-                    <h3>Ручна робота</h3>
-                    <p>Кожна пляшка вирізається і обробляється вручну, тому текстура і форма кожного виробу трохи відрізняються.</p>
+                    <h3 data-i18n="adv2Title">Ручна робота</h3>
+                    <p data-i18n="adv2Text">Кожна пляшка вирізається і обробляється вручну, тому текстура і форма кожного виробу трохи відрізняються.</p>
                 </div>
                 <div class="advantage-card">
                     <div class="advantage-icon"><i class="fa-solid fa-seedling"></i></div>
-                    <h3>Друге життя скла</h3>
-                    <p>Замість смітника — стакан на твоєму столі. Менше скляних відходів, більше речей з характером.</p>
+                    <h3 data-i18n="adv3Title">Друге життя скла</h3>
+                    <p data-i18n="adv3Text">Замість смітника — стакан на твоєму столі. Менше скляних відходів, більше речей з характером.</p>
                 </div>
             </div>
         </div>
@@ -123,38 +175,42 @@
     <!-- ABOUT -->
     <section class="section reveal" id="about">
         <div class="container split-section">
-            <img src="data/about.jpg" alt="Процес виготовлення" onerror="this.style.display='none'">
+            <div class="split-media"><img src="assets/logo-mark.png" alt="RE BOTTLE"></div>
             <div>
-                <h2 style="font-family:var(--font-display);font-size:30px;margin-bottom:16px;">Від пляшки до предмету, яким хочеться користуватись</h2>
-                <p class="lede">RE BOTTLE почався з простої ідеї: пляшка, яка інакше опинилась би в смітнику, може стати стаканом, вазою чи підсвічником — і служити роками. Виробництво базується в Польщі, продукція їде як полякам, так і в Україну.</p>
-                <p class="lede">Кожен виріб проходить різку, шліфування країв у кілька етапів і фінальну поліровку — тому їх можна сміливо ставити на стіл щодня.</p>
+                <div class="section-eyebrow" data-i18n="aboutEyebrow">Про нас</div>
+                <h2 data-i18n="aboutTitle">Від пляшки до предмету, яким хочеться користуватись</h2>
+                <p data-i18n="aboutP1">RE BOTTLE почався з простої ідеї: пляшка, яка інакше опинилась би в смітнику, може стати стаканом, вазою чи підсвічником — і служити роками. Виробництво базується в Польщі, продукція їде як полякам, так і в Україну.</p>
+                <p data-i18n="aboutP2">Кожен виріб проходить різку, шліфування країв у кілька етапів і фінальну поліровку — тому їх можна сміливо ставити на стіл щодня.</p>
             </div>
         </div>
     </section>
 
-    <!-- DELIVERY & PAYMENT -->
+    <!-- DELIVERY -->
     <section class="section reveal" id="delivery">
         <div class="container">
             <div class="section-header">
-                <div><h2>Доставка та оплата</h2></div>
+                <div>
+                    <div class="section-eyebrow" data-i18n="deliveryEyebrow">Умови</div>
+                    <h2 data-i18n="deliveryTitle">Доставка та оплата</h2>
+                </div>
             </div>
             <div class="delivery-grid">
                 <div class="delivery-card">
                     <span class="flag">🇵🇱</span>
-                    <h4>Польща</h4>
+                    <h4 data-i18n="poland">Польща</h4>
                     <ul>
-                        <li>InPost Paczkomaty — за номером поштомату</li>
-                        <li>DPD / Poczta Polska — кур'єр або адреса</li>
-                        <li>Оплата: BLIK або переказ на рахунок</li>
+                        <li data-i18n="plD1">InPost Paczkomaty — за номером поштомату</li>
+                        <li data-i18n="plD2">DPD / Poczta Polska — кур'єр або адреса</li>
+                        <li data-i18n="plD3">Оплата: BLIK, переказ на карту або IBAN</li>
                     </ul>
                 </div>
                 <div class="delivery-card">
                     <span class="flag">🇺🇦</span>
-                    <h4>Україна</h4>
+                    <h4 data-i18n="ukraine">Україна</h4>
                     <ul>
-                        <li>Нова Пошта — місто, відділення або поштомат</li>
-                        <li>Укрпошта — за індексом</li>
-                        <li>Оплата: картка Monobank / ПриватБанк</li>
+                        <li data-i18n="uaD1">Нова Пошта — відділення або поштомат</li>
+                        <li data-i18n="uaD2">Укрпошта — за індексом</li>
+                        <li data-i18n="uaD3">Оплата: переказ на картку</li>
                     </ul>
                 </div>
             </div>
@@ -162,48 +218,51 @@
     </section>
 
     <!-- CONTACTS -->
-    <section class="section" id="contacts">
+    <section class="section reveal" id="contacts">
         <div class="container">
             <div class="contacts-band">
-                <h2>Питання щодо замовлення чи індивідуального виробу?</h2>
+                <h2 data-i18n="contactsTitle">Питання щодо замовлення чи індивідуального виробу?</h2>
                 <div class="contacts-links">
-                    <a href="https://t.me/+7t_IkxPRqqo3MmQ0" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram-канал</a>
-                    <a href="#" id="contactTelegramBot"><i class="fa-solid fa-paper-plane"></i> Написати менеджеру</a>
+                    <a href="https://t.me/Agent_Ruslan" target="_blank" rel="noopener"><i class="fa-brands fa-telegram ic-telegram"></i> Telegram</a>
+                    <a href="viber://chat?number=%2B380680475706"><i class="fa-brands fa-viber ic-viber"></i> Viber</a>
+                    <a href="https://wa.me/48787212708" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp ic-whatsapp"></i> WhatsApp</a>
+                    <a href="https://www.instagram.com/drapak.ruslan23" target="_blank" rel="noopener"><i class="fa-brands fa-instagram ic-instagram"></i> Instagram</a>
+                    <a href="https://www.tiktok.com/@agent_ruslann" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok ic-tiktok"></i> TikTok</a>
                 </div>
             </div>
         </div>
     </section>
 
     <footer class="footer">
-        <div class="container">© RE BOTTLE — Handmade Glass. Друге життя скляної пляшки.</div>
+        <div class="container">© RE BOTTLE — Handmade Glass. Glass. Reborn.</div>
     </footer>
 
-    <!-- PRODUCT MODAL -->
+    <!-- MODALS -->
     <div class="modal" id="productModal">
-        <div class="modal-content">
-            <button type="button" class="close-btn" onclick="closeModal('productModal')">&times;</button>
+        <div class="modal-content wide">
+            <button type="button" class="close-btn" onclick="closeModal('productModal')"><i class="fa-solid fa-xmark"></i></button>
             <div id="productModalBody"></div>
         </div>
     </div>
 
-    <!-- CART MODAL -->
     <div class="modal" id="cartModal">
         <div class="modal-content">
-            <button type="button" class="close-btn" onclick="closeModal('cartModal')">&times;</button>
-            <h2 class="modal-title">Кошик</h2>
+            <button type="button" class="close-btn" onclick="closeModal('cartModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title" data-i18n="cart">Кошик</h2>
             <div id="cartModalBody"></div>
         </div>
     </div>
 
-    <!-- CHECKOUT MODAL -->
     <div class="modal" id="checkoutModal">
         <div class="modal-content">
-            <button type="button" class="close-btn" onclick="closeModal('checkoutModal')">&times;</button>
-            <h2 class="modal-title">Оформлення замовлення</h2>
+            <button type="button" class="close-btn" onclick="closeModal('checkoutModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title" data-i18n="checkout">Оформлення замовлення</h2>
             <div id="checkoutModalBody"></div>
         </div>
     </div>
 
-    <script src="script.js?v=1"></script>
+    <div class="toast" id="toast"><i class="fa-solid fa-check"></i><span id="toastText"></span></div>
+
+    <script src="script.js?v=2"></script>
 </body>
 </html>
