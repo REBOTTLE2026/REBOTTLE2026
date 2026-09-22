@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0e1311">
     <title>RE BOTTLE — Handmade Glass | Посуд і декор з пляшок ручної роботи</title>
     <meta name="description" content="RE BOTTLE — стакани, бокали, соусниці, вази та підсвічники ручної роботи зі скляних пляшок. Доставка в Польщу та Україну.">
@@ -139,7 +139,6 @@
             </button>
         </div>
 
-        <div class="category-filters" id="categoryFilters"></div>
         <div class="products-grid" id="products-container"></div>
     </main>
 
@@ -175,7 +174,7 @@
     <!-- ABOUT -->
     <section class="section reveal" id="about">
         <div class="container split-section">
-            <div class="split-media"><img src="assets/logo-mark.png" alt="RE BOTTLE"></div>
+            <div class="split-media"><img src="assets/process.jpg" alt="Процес виготовлення RE BOTTLE" style="width:100%;height:100%;object-fit:cover;"></div>
             <div>
                 <div class="section-eyebrow" data-i18n="aboutEyebrow">Про нас</div>
                 <h2 data-i18n="aboutTitle">Від пляшки до предмету, яким хочеться користуватись</h2>
@@ -260,6 +259,8 @@
             <div id="checkoutModalBody"></div>
         </div>
     </div>
+
+    <div class="popover-backdrop" id="popoverBackdrop" onclick="closeAllPopovers()"></div>
 
     <div class="toast" id="toast"><i class="fa-solid fa-check"></i><span id="toastText"></span></div>
 

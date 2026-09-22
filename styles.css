@@ -391,6 +391,41 @@ a { color: inherit; text-decoration: none; }
     .header-search { order: 10; flex-basis: 100%; }
 }
 
+.popover-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 7, 0.65);
+    backdrop-filter: blur(2px);
+    z-index: 290;
+}
+.popover-backdrop.open { display: block; }
+
+@media (max-width: 680px) {
+    .dropdown-menu, .contacts-popover {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: calc(100vw - 44px);
+        max-width: 360px;
+        max-height: 76vh;
+        transform: translate(-50%, -50%) !important;
+        animation: none !important;
+        z-index: 300;
+    }
+    .dropdown.open .dropdown-menu,
+    .contacts-popover.open {
+        animation: centerPopIn 0.18s ease !important;
+    }
+}
+
+@keyframes centerPopIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
 /* ==========================================================================
    HERO
    ========================================================================== */
@@ -612,9 +647,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 .stock-badge {
-    position: absolute;
-    top: 11px;
-    left: 11px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -622,9 +654,10 @@ a { color: inherit; text-decoration: none; }
     font-weight: 700;
     padding: 6px 11px;
     border-radius: 20px;
-    backdrop-filter: blur(8px);
-    z-index: 2;
+    width: fit-content;
 }
+
+.stock-badge.card-position { position: static; backdrop-filter: none; }
 
 .stock-badge.in { background: rgba(110, 207, 168, 0.18); color: var(--teal); border: 1px solid rgba(110, 207, 168, 0.4); }
 .stock-badge.out { background: rgba(226, 104, 90, 0.2); color: var(--danger); border: 1px solid rgba(226, 104, 90, 0.4); }
@@ -763,8 +796,8 @@ a { color: inherit; text-decoration: none; }
    ========================================================================== */
 
 .split-section { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 44px; align-items: center; }
-.split-section .split-media { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-strong); aspect-ratio: 1/1; background: var(--bg-surface); display: flex; align-items: center; justify-content: center; padding: 40px; }
-.split-section .split-media img { width: 100%; height: auto; opacity: 0.92; }
+.split-section .split-media { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-strong); aspect-ratio: 4/5; background: var(--bg-surface); }
+.split-section .split-media img { width: 100%; height: 100%; object-fit: cover; }
 .split-section h2 { font-family: var(--font-display); font-size: 30px; margin-bottom: 15px; }
 .split-section p { font-size: 15px; color: var(--text-secondary); margin-bottom: 14px; }
 
@@ -829,7 +862,7 @@ a { color: inherit; text-decoration: none; }
     align-items: flex-start;
     justify-content: center;
     overflow-y: auto;
-    padding: 34px 16px;
+    padding: 34px 16px calc(34px + env(safe-area-inset-bottom, 0px)) 16px;
 }
 
 .modal.open { display: flex; }
@@ -841,9 +874,11 @@ a { color: inherit; text-decoration: none; }
     max-width: 560px;
     width: 100%;
     padding: 30px;
+    padding-bottom: max(30px, calc(20px + env(safe-area-inset-bottom, 0px)));
     position: relative;
     box-shadow: var(--shadow-pop);
     animation: modalIn 0.22s ease;
+    margin-bottom: 40px;
 }
 
 .modal-content.wide { max-width: 960px; }
@@ -1092,17 +1127,19 @@ a { color: inherit; text-decoration: none; }
 
 .file-field {
     border: 1.5px dashed var(--border-strong);
-    border-radius: 10px;
-    padding: 15px;
+    border-radius: 9px;
+    padding: 10px 12px;
     text-align: center;
     cursor: pointer;
     position: relative;
     background: var(--bg-well);
     transition: border-color 0.15s ease;
+    display: block;
+    margin-top: 4px;
 }
 .file-field:hover { border-color: var(--amber-line); }
 .file-field input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.file-field-text { font-size: 13px; color: var(--text-muted); }
+.file-field-text { font-size: 12px; color: var(--text-muted); line-height: 1.4; display: block; word-break: break-word; }
 .file-field.has-file { border-color: var(--teal); border-style: solid; }
 .file-field.has-file .file-field-text { color: var(--teal); }
 

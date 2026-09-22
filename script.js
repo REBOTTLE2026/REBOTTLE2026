@@ -65,7 +65,7 @@ const I18N = {
         addedToCart: "Додано в кошик", shareProduct: "Поділитися товаром",
         npCourier: "Кур'єр за адресою", npBranch: "Відділення Нової Пошти",
         cityFirst: "Спершу оберіть місто", nothing: "Збігів не знайдено",
-        payCardUA: "Переказ на картку", payBlik: "BLIK", payTransferPL: "Переказ на карту / IBAN",
+        payCardUA: "Переказ на картку", payCOD: "Накладений платіж", payBlik: "BLIK", payTransferPL: "Переказ на карту / IBAN",
         pcs: "шт."
     },
     pl: {
@@ -116,7 +116,7 @@ const I18N = {
         addedToCart: "Dodano do koszyka", shareProduct: "Udostępnij produkt",
         npCourier: "Kurier pod adres", npBranch: "Oddział Nova Poshta",
         cityFirst: "Najpierw wybierz miasto", nothing: "Brak dopasowań",
-        payCardUA: "Przelew na kartę", payBlik: "BLIK", payTransferPL: "Przelew na kartę / IBAN",
+        payCardUA: "Przelew na kartę", payCOD: "Za pobraniem", payBlik: "BLIK", payTransferPL: "Przelew na kartę / IBAN",
         pcs: "szt."
     }
 };
@@ -259,7 +259,6 @@ function categoryLabel(slug) {
 
 function renderCategoryMenus() {
     const menu = document.getElementById("categoryMenu");
-    const chips = document.getElementById("categoryFilters");
 
     const items = [{ slug: "all", label: t("allProducts"), icon: "fa-border-all" }]
         .concat(allCategories.map(c => ({ slug: c.slug, label: localized(c.label), icon: "fa-tag" })));
@@ -269,15 +268,12 @@ function renderCategoryMenus() {
                 onclick="filterCategory('${escapeAttr(i.slug)}')">
             <i class="fa-solid ${i.icon}"></i> ${escapeHtml(i.label)}
         </button>`).join("");
-
-    chips.innerHTML = items.map(i => `
-        <button type="button" class="category-filter-btn ${i.slug === currentCategory ? "active" : ""}"
-                onclick="filterCategory('${escapeAttr(i.slug)}')">${escapeHtml(i.label)}</button>`).join("");
 }
 
 function filterCategory(slug) {
     currentCategory = slug;
     document.getElementById("categoryDropdown").classList.remove("open");
+    document.getElementById("popoverBackdrop")?.classList.remove("open");
     document.getElementById("catalogTitle").textContent = slug === "all" ? t("allProducts") : categoryLabel(slug);
     renderCategoryMenus();
     renderProducts(getFilteredProducts());
@@ -315,10 +311,6 @@ function renderProducts(products) {
         return `
         <div class="product-card" onclick="openProductModal('${p.id}')">
             <div class="product-card-img">
-                <span class="stock-badge ${inStock ? "in" : "out"}">
-                    <i class="fa-solid ${inStock ? "fa-circle-check" : "fa-circle-xmark"}"></i>
-                    ${inStock ? t("inStock") : t("outOfStock")}
-                </span>
                 ${inStock ? `<button type="button" class="card-cart-btn" title="${t("addToCart")}"
                         onclick="event.stopPropagation(); addToCart('${p.id}', this)">
                     <i class="fa-solid fa-cart-plus"></i></button>` : ""}
@@ -327,6 +319,10 @@ function renderProducts(products) {
                     : `<div class="img-fallback"><i class="fa-solid fa-wine-bottle"></i></div>`}
             </div>
             <div class="product-card-body">
+                <span class="stock-badge card-position ${inStock ? "in" : "out"}">
+                    <i class="fa-solid ${inStock ? "fa-circle-check" : "fa-circle-xmark"}"></i>
+                    ${inStock ? t("inStock") : t("outOfStock")}
+                </span>
                 ${p.article ? `<div class="article-row">
                     <i class="fa-solid fa-barcode"></i> ${t("article")}: ${escapeHtml(p.article)}
                     <button type="button" class="article-copy" title="${t("copy")}"
@@ -517,6 +513,7 @@ document.addEventListener("click", (e) => {
 
     if (!e.target.closest("#categoryDropdown")) document.getElementById("categoryDropdown")?.classList.remove("open");
     if (!e.target.closest("#contactsDropdown")) document.getElementById("contactsPopover")?.classList.remove("open");
+    if (!e.target.closest("#categoryDropdown") && !e.target.closest("#contactsDropdown")) document.getElementById("popoverBackdrop")?.classList.remove("open");
     if (!e.target.closest(".header-search")) document.getElementById("searchResults")?.classList.remove("open");
     if (!e.target.closest(".form-group")) document.querySelectorAll(".np-list.open").forEach(l => l.classList.remove("open"));
 });
@@ -525,8 +522,23 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") document.querySelectorAll(".modal.open").forEach(m => closeModal(m.id));
 });
 
-function toggleCategoryMenu(e) { e.stopPropagation(); document.getElementById("categoryDropdown").classList.toggle("open"); }
-function toggleContactsMenu(e) { e.stopPropagation(); document.getElementById("contactsPopover").classList.toggle("open"); }
+function toggleCategoryMenu(e) {
+    e.stopPropagation();
+    document.getElementById("contactsPopover")?.classList.remove("open");
+    const open = document.getElementById("categoryDropdown").classList.toggle("open");
+    document.getElementById("popoverBackdrop").classList.toggle("open", open);
+}
+function toggleContactsMenu(e) {
+    e.stopPropagation();
+    document.getElementById("categoryDropdown")?.classList.remove("open");
+    const open = document.getElementById("contactsPopover").classList.toggle("open");
+    document.getElementById("popoverBackdrop").classList.toggle("open", open);
+}
+function closeAllPopovers() {
+    document.getElementById("categoryDropdown")?.classList.remove("open");
+    document.getElementById("contactsPopover")?.classList.remove("open");
+    document.getElementById("popoverBackdrop")?.classList.remove("open");
+}
 
 // ============================================================================
 // Кошик — модалка
@@ -855,7 +867,7 @@ function renderPaymentOptions() {
     const select = document.getElementById("paymentMethod");
     const options = checkoutCountry === "PL"
         ? [{ v: "blik", l: t("payBlik") }, { v: "transfer_pl", l: t("payTransferPL") }]
-        : [{ v: "card_ua", l: t("payCardUA") }];
+        : [{ v: "cod", l: t("payCOD") }, { v: "card_ua", l: t("payCardUA") }];
 
     select.innerHTML = options.map(o => `<option value="${o.v}">${o.l}</option>`).join("");
     checkoutPayment = options[0].v;
@@ -865,6 +877,10 @@ function renderPaymentOptions() {
 async function onPaymentChange() {
     checkoutPayment = document.getElementById("paymentMethod").value;
     const box = document.getElementById("requisitesContainer");
+
+    // накладений платіж — реквізити не потрібні
+    if (checkoutPayment === "cod") { box.innerHTML = ""; return; }
+
     box.innerHTML = `<div class="np-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>`;
 
     try {
