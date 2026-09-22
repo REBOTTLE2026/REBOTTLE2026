@@ -319,16 +319,18 @@ function renderProducts(products) {
                     : `<div class="img-fallback"><i class="fa-solid fa-wine-bottle"></i></div>`}
             </div>
             <div class="product-card-body">
-                <span class="stock-badge card-position ${inStock ? "in" : "out"}">
-                    <i class="fa-solid ${inStock ? "fa-circle-check" : "fa-circle-xmark"}"></i>
-                    ${inStock ? t("inStock") : t("outOfStock")}
-                </span>
-                ${p.article ? `<div class="article-row">
-                    <i class="fa-solid fa-barcode"></i> ${t("article")}: ${escapeHtml(p.article)}
-                    <button type="button" class="article-copy" title="${t("copy")}"
-                        onclick="event.stopPropagation(); copyText('${escapeAttr(p.article)}', this, '${t("articleCopied")}')">
-                        <i class="fa-regular fa-copy"></i></button>
-                </div>` : ""}
+                <div class="article-row" style="justify-content: space-between;">
+                    <span>
+                        ${p.article ? `<i class="fa-solid fa-barcode"></i> ${t("article")}: ${escapeHtml(p.article)}
+                        <button type="button" class="article-copy" title="${t("copy")}"
+                            onclick="event.stopPropagation(); copyText('${escapeAttr(p.article)}', this, '${t("articleCopied")}')">
+                            <i class="fa-regular fa-copy"></i></button>` : ""}
+                    </span>
+                    <span class="stock-badge card-position ${inStock ? "in" : "out"}">
+                        <i class="fa-solid ${inStock ? "fa-circle-check" : "fa-circle-xmark"}"></i>
+                        ${inStock ? t("inStock") : t("outOfStock")}
+                    </span>
+                </div>
                 <div class="product-card-title">${escapeHtml(localized(p.name))}</div>
                 <div class="price-row">
                     <span class="price-now">${priceOf(p)}<small>${currencyUnit()}</small></span>
