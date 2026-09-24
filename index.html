@@ -29,14 +29,11 @@
             </a>
 
             <!-- КАТЕГОРІЇ -->
-            <div class="dropdown" id="categoryDropdown">
-                <button type="button" class="dropdown-toggle" onclick="toggleCategoryMenu(event)">
-                    <i class="fa-solid fa-border-all"></i>
-                    <span data-i18n="categories">Категорії</span>
-                    <i class="fa-solid fa-chevron-down caret"></i>
-                </button>
-                <div class="dropdown-menu" id="categoryMenu"></div>
-            </div>
+            <button type="button" class="dropdown-toggle" onclick="openModal('categoryModal')">
+                <i class="fa-solid fa-border-all"></i>
+                <span data-i18n="categories">Категорії</span>
+                <i class="fa-solid fa-chevron-down caret"></i>
+            </button>
 
             <!-- ПОШУК -->
             <div class="header-search">
@@ -51,41 +48,13 @@
 
             <div class="header-actions">
                 <!-- ПІДТРИМКА / КОНТАКТИ -->
-                <div class="dropdown" id="contactsDropdown" style="position: relative;">
-                    <button type="button" class="header-chip" onclick="toggleContactsMenu(event)">
-                        <i class="fa-solid fa-headset"></i>
-                        <span class="header-chip-text">
-                            <b data-i18n="support">Підтримка</b>
-                            <span data-i18n="supportSub">Ми на зв'язку</span>
-                        </span>
-                    </button>
-                    <div class="contacts-popover" id="contactsPopover">
-                        <a href="https://t.me/Agent_Ruslan" target="_blank" rel="noopener" class="contact-option">
-                            <i class="fa-brands fa-telegram ic-telegram"></i>
-                            <div><b>Telegram</b><span data-i18n="writeManager">Написати менеджеру</span></div>
-                        </a>
-                        <a href="viber://chat?number=%2B380680475706" class="contact-option">
-                            <i class="fa-brands fa-viber ic-viber"></i>
-                            <div><b>Viber</b><span>+38 068 047 57 06</span></div>
-                        </a>
-                        <a href="https://wa.me/48787212708" target="_blank" rel="noopener" class="contact-option">
-                            <i class="fa-brands fa-whatsapp ic-whatsapp"></i>
-                            <div><b>WhatsApp</b><span>+48 787 212 708</span></div>
-                        </a>
-                        <a href="https://www.instagram.com/drapak.ruslan23" target="_blank" rel="noopener" class="contact-option">
-                            <i class="fa-brands fa-instagram ic-instagram"></i>
-                            <div><b>Instagram</b><span>@drapak.ruslan23</span></div>
-                        </a>
-                        <a href="https://www.tiktok.com/@agent_ruslann" target="_blank" rel="noopener" class="contact-option">
-                            <i class="fa-brands fa-tiktok ic-tiktok"></i>
-                            <div><b>TikTok</b><span>@agent_ruslann</span></div>
-                        </a>
-                        <a href="https://t.me/+7t_IkxPRqqo3MmQ0" target="_blank" rel="noopener" class="contact-option">
-                            <i class="fa-solid fa-bullhorn" style="color: var(--amber);"></i>
-                            <div><b data-i18n="channel">Наш канал</b><span data-i18n="channelSub">Новинки та акції</span></div>
-                        </a>
-                    </div>
-                </div>
+                <button type="button" class="header-chip" onclick="openModal('contactsModal')">
+                    <i class="fa-solid fa-headset"></i>
+                    <span class="header-chip-text">
+                        <b data-i18n="support">Підтримка</b>
+                        <span data-i18n="supportSub">Ми на зв'язку</span>
+                    </span>
+                </button>
 
                 <!-- МОВА -->
                 <div class="lang-toggle">
@@ -237,6 +206,45 @@
     </footer>
 
     <!-- MODALS -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <button type="button" class="close-btn" onclick="closeModal('categoryModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title" data-i18n="categories">Категорії</h2>
+            <div id="categoryMenu"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="contactsModal">
+        <div class="modal-content">
+            <button type="button" class="close-btn" onclick="closeModal('contactsModal')"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title" data-i18n="support">Підтримка</h2>
+            <a href="https://t.me/Agent_Ruslan" target="_blank" rel="noopener" class="contact-option">
+                <i class="fa-brands fa-telegram ic-telegram"></i>
+                <div><b>Telegram</b><span data-i18n="writeManager">Написати менеджеру</span></div>
+            </a>
+            <a href="viber://chat?number=%2B380680475706" class="contact-option">
+                <i class="fa-brands fa-viber ic-viber"></i>
+                <div><b>Viber</b><span>+38 068 047 57 06</span></div>
+            </a>
+            <a href="https://wa.me/48787212708" target="_blank" rel="noopener" class="contact-option">
+                <i class="fa-brands fa-whatsapp ic-whatsapp"></i>
+                <div><b>WhatsApp</b><span>+48 787 212 708</span></div>
+            </a>
+            <a href="https://www.instagram.com/drapak.ruslan23" target="_blank" rel="noopener" class="contact-option">
+                <i class="fa-brands fa-instagram ic-instagram"></i>
+                <div><b>Instagram</b><span>@drapak.ruslan23</span></div>
+            </a>
+            <a href="https://www.tiktok.com/@agent_ruslann" target="_blank" rel="noopener" class="contact-option">
+                <i class="fa-brands fa-tiktok ic-tiktok"></i>
+                <div><b>TikTok</b><span>@agent_ruslann</span></div>
+            </a>
+            <a href="https://t.me/+7t_IkxPRqqo3MmQ0" target="_blank" rel="noopener" class="contact-option">
+                <i class="fa-solid fa-bullhorn" style="color: var(--amber);"></i>
+                <div><b data-i18n="channel">Наш канал</b><span data-i18n="channelSub">Новинки та акції</span></div>
+            </a>
+        </div>
+    </div>
+
     <div class="modal" id="productModal">
         <div class="modal-content wide">
             <button type="button" class="close-btn" onclick="closeModal('productModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -259,8 +267,6 @@
             <div id="checkoutModalBody"></div>
         </div>
     </div>
-
-    <div class="popover-backdrop" id="popoverBackdrop" onclick="closeAllPopovers()"></div>
 
     <div class="toast" id="toast"><i class="fa-solid fa-check"></i><span id="toastText"></span></div>
 

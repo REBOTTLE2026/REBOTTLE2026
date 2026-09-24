@@ -272,8 +272,7 @@ function renderCategoryMenus() {
 
 function filterCategory(slug) {
     currentCategory = slug;
-    document.getElementById("categoryDropdown").classList.remove("open");
-    document.getElementById("popoverBackdrop")?.classList.remove("open");
+    closeModal("categoryModal");
     document.getElementById("catalogTitle").textContent = slug === "all" ? t("allProducts") : categoryLabel(slug);
     renderCategoryMenus();
     renderProducts(getFilteredProducts());
@@ -513,9 +512,6 @@ function closeModal(id) {
 document.addEventListener("click", (e) => {
     document.querySelectorAll(".modal.open").forEach(m => { if (e.target === m) closeModal(m.id); });
 
-    if (!e.target.closest("#categoryDropdown")) document.getElementById("categoryDropdown")?.classList.remove("open");
-    if (!e.target.closest("#contactsDropdown")) document.getElementById("contactsPopover")?.classList.remove("open");
-    if (!e.target.closest("#categoryDropdown") && !e.target.closest("#contactsDropdown")) document.getElementById("popoverBackdrop")?.classList.remove("open");
     if (!e.target.closest(".header-search")) document.getElementById("searchResults")?.classList.remove("open");
     if (!e.target.closest(".form-group")) document.querySelectorAll(".np-list.open").forEach(l => l.classList.remove("open"));
 });
@@ -524,23 +520,7 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") document.querySelectorAll(".modal.open").forEach(m => closeModal(m.id));
 });
 
-function toggleCategoryMenu(e) {
-    e.stopPropagation();
-    document.getElementById("contactsPopover")?.classList.remove("open");
-    const open = document.getElementById("categoryDropdown").classList.toggle("open");
-    document.getElementById("popoverBackdrop").classList.toggle("open", open);
-}
-function toggleContactsMenu(e) {
-    e.stopPropagation();
-    document.getElementById("categoryDropdown")?.classList.remove("open");
-    const open = document.getElementById("contactsPopover").classList.toggle("open");
-    document.getElementById("popoverBackdrop").classList.toggle("open", open);
-}
-function closeAllPopovers() {
-    document.getElementById("categoryDropdown")?.classList.remove("open");
-    document.getElementById("contactsPopover")?.classList.remove("open");
-    document.getElementById("popoverBackdrop")?.classList.remove("open");
-}
+
 
 // ============================================================================
 // Кошик — модалка
